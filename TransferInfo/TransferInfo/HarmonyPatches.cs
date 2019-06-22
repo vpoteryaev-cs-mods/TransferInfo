@@ -43,7 +43,7 @@ namespace TransferInfo
         {
             var batch = new CargoBatch(sourceBuilding, false, data.m_transferType, data.m_transferSize, data.m_flags);
             //todo: add new batch to common database
-            //TransferStorage.Instance.Count(batch);
+            //TransferManager.Instance.Count(batch);
         }
         
         public static void CargoTruckAI_PreChangeVehicleType(out CargoBatch __state, ref Vehicle vehicleData, PathUnit.Position pathPos, uint laneID)
@@ -60,7 +60,7 @@ namespace TransferInfo
             if (__result)
             {
                 //todo: add new batch to common database
-                //TransferStorage.Instance.Count(__state);
+                //TransfersManager.Instance.Count(__state);
             }
         }
     }
