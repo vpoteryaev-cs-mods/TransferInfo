@@ -1,3 +1,4 @@
+[![Build Status](https://dev.azure.com/vpoteryaev-cs-mods/TransferInfo/_apis/build/status/vpoteryaev-cs-mods.TransferInfo?branchName=master)](https://dev.azure.com/vpoteryaev-cs-mods/TransferInfo/_build/latest?definitionId=2&branchName=master)
 # Transfer Info - Cities: Skylines mod
 
 The idea of creation and some functionality are borrowed from [Steam: Cargo Info](https://steamcommunity.com/sharedfiles/filedetails/?id=1072157697) with [Source on GitHub](https://github.com/rumkex/Skylines-CargoInfoMod). Many thanks to the original's author(s)!
