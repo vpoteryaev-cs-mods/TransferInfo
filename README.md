@@ -1,3 +1,4 @@
+[![Board Status](https://dev.azure.com/vpoteryaev-cs-mods/d38cc6ee-38ef-468a-b6be-ae4a69f50ea6/f802dcea-8821-4876-8b6d-efa2b1f686fc/_apis/work/boardbadge/28a4bcb2-9596-49e1-a269-dd9a829a4993?columnOptions=1)](https://dev.azure.com/vpoteryaev-cs-mods/d38cc6ee-38ef-468a-b6be-ae4a69f50ea6/_boards/board/t/f802dcea-8821-4876-8b6d-efa2b1f686fc/Microsoft.FeatureCategory)
 [![Build Status](https://dev.azure.com/vpoteryaev-cs-mods/TransferInfo/_apis/build/status/vpoteryaev-cs-mods.TransferInfo?branchName=master)](https://dev.azure.com/vpoteryaev-cs-mods/TransferInfo/_build/latest?definitionId=2&branchName=master)
 # Transfer Info - Cities: Skylines mod
 
