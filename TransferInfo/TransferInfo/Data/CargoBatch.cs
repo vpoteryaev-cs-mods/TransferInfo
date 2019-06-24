@@ -1,77 +1,81 @@
 ﻿using System;
 using UnityEngine;
 
-using TransferType = TransferManager.TransferReason;
+using TransferReason = TransferManager.TransferReason;
 
 namespace TransferInfo.Data
 {
-    //all possible combinations are used
+    //Not all possible combinations are used, but:
     // 0 - local receive
     // 1 - local sent
     // 2 - imported receive
     // 3 - imported sent
-    // ...
+    // 4 - exported receive
+    // 5 - exported sent
     [Flags]
     internal enum TransferConnectionType
     {
-        None = 0x00,
+        Receive = 0x00,
         Sent = 0x01,
         Imported = 0x02,
         Exported = 0x04
     }
 
+
     internal readonly struct CargoBatch
     {
+        internal static readonly int NumConnectionTypes = 6;
+
         internal readonly ushort buildingID;
         internal readonly ushort transferSize;
         internal readonly TransferConnectionType transferConnectionType;
-        internal readonly TransferType transferType;
-        internal CargoBatch(ushort buildingID, bool incoming, byte transferType, ushort transferSize, Vehicle.Flags flags)
+        internal readonly TransferReason transferReason;
+        internal CargoBatch(ushort buildingID, bool incoming, byte transferReason, ushort transferSize, Vehicle.Flags flags)
         {
             this.transferSize = transferSize;
             this.buildingID = buildingID;
-            transferConnectionType = incoming ? TransferConnectionType.None : TransferConnectionType.Sent;
-
+            transferConnectionType = incoming ? TransferConnectionType.Receive : TransferConnectionType.Sent;
             if ((flags & Vehicle.Flags.Exporting) != 0)
                 transferConnectionType |= TransferConnectionType.Exported;
             else if ((flags & Vehicle.Flags.Importing) != 0)
                 transferConnectionType |= TransferConnectionType.Imported;
 
-            this.transferType = (TransferType)transferType;
-            switch ((TransferType)transferType)
+            switch ((TransferReason)transferReason)
             {
-                case TransferType.Garbage:
-                case TransferType.GarbageMove:
-                case TransferType.Oil:
-                case TransferType.Petrol:
-                case TransferType.Petroleum:
-                case TransferType.Plastics:
-                case TransferType.Ore:
-                case TransferType.Coal:
-                case TransferType.Glass:
-                case TransferType.Metals:
-                case TransferType.Lumber:
-                case TransferType.Paper:
-                case TransferType.PlanedTimber:
-                case TransferType.Grain:
-                case TransferType.AnimalProducts:
-                case TransferType.Flours:
-                case TransferType.Goods:
-                case TransferType.Food:
-                case TransferType.LuxuryProducts:
-                case TransferType.Snow:
-                case TransferType.SnowMove:
-                case TransferType.Mail:
-                case TransferType.UnsortedMail:
-                case TransferType.SortedMail:
-                case TransferType.OutgoingMail:
-                case TransferType.IncomingMail:
-                    this.transferType = (TransferType)transferType;
+                case TransferReason.Garbage:
+                case TransferReason.GarbageMove:
+                case TransferReason.Oil:
+                case TransferReason.Petrol:
+                case TransferReason.Petroleum:
+                case TransferReason.Plastics:
+                case TransferReason.Ore:
+                case TransferReason.Coal:
+                case TransferReason.Glass:
+                case TransferReason.Metals:
+                case TransferReason.Logs:
+                case TransferReason.Lumber:
+                case TransferReason.Paper:
+                case TransferReason.PlanedTimber:
+                case TransferReason.Grain:
+                case TransferReason.Food:
+                case TransferReason.AnimalProducts:
+                case TransferReason.Flours:
+                case TransferReason.Goods:
+                case TransferReason.LuxuryProducts:
+                case TransferReason.Snow:
+                case TransferReason.SnowMove:
+                case TransferReason.Mail:
+                case TransferReason.UnsortedMail:
+                case TransferReason.SortedMail:
+                case TransferReason.OutgoingMail:
+                case TransferReason.IncomingMail:
+                    this.transferReason = (TransferReason)transferReason;
                     break;
                 default:
 #if DEBUG
-                    Debug.LogErrorFormat("Unexpected transfer type: {0}", Enum.GetName(typeof(TransferType), transferType));
+                    Debug.LogErrorFormat("Unexpected transfer type: {0}", Enum.GetName(typeof(TransferReason), transferReason));
 #endif
+                    this.transferReason = TransferReason.None;
                     break;
             }
         }

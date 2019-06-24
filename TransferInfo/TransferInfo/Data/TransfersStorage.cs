@@ -10,8 +10,9 @@ namespace TransferInfo.Data
     //used as storage by pairs: TransferReason - Quantity
     internal class TransfersStorage
     {
-        //Code in the JoiningByType region is related to Note https://github.com/vpoteryaev/CS-TransferInfo/projects/1#card-23084985
+        //Code in the JoiningByType region is related to Feature https://dev.azure.com/vpoteryaev-cs-mods/TransferInfo/_workitems/edit/10/
         #region JoiningByType
+        /*
         internal static readonly HashSet<TransferReason> GarbageTypes = new HashSet<TransferReason>()
         {
             TransferReason.Garbage,
@@ -37,6 +38,7 @@ namespace TransferInfo.Data
         internal static readonly HashSet<TransferReason> ForestryTypes = new HashSet<TransferReason>()
         {
             TransferReason.Lumber,
+            TransferReason.Logs,
             TransferReason.Paper,
             TransferReason.PlanedTimber
         };
@@ -44,6 +46,7 @@ namespace TransferInfo.Data
         internal static readonly HashSet<TransferReason> AgricultureTypes = new HashSet<TransferReason>()
         {
             TransferReason.Grain,
+            TransferReason.Food,
             TransferReason.AnimalProducts,
             TransferReason.Flours
         };
@@ -51,7 +54,6 @@ namespace TransferInfo.Data
         internal static readonly HashSet<TransferReason> GoodsTypes = new HashSet<TransferReason>()
         {
             TransferReason.Goods,
-            TransferReason.Food,
             TransferReason.LuxuryProducts
         };
 
@@ -73,32 +75,33 @@ namespace TransferInfo.Data
         internal int GetTransferedSum(HashSet<TransferReason> reasons)
         {
             var query =
-                from Transfer in Transfers
+                from Transfer in _transfers
                 join types in reasons on Transfer.Key equals types
                 select Transfer.Value;
             return query.Sum();
         }
+        */
         #endregion
 
-        private readonly Dictionary<TransferReason, int> Transfers;
+        private readonly Dictionary<TransferReason, int> _transfers = new Dictionary<TransferReason, int>();
 
 
         internal TransfersStorage()
         {
-            Transfers = new Dictionary<TransferReason, int>();
+            //_transfers = new Dictionary<TransferReason, int>();
         }
 
         internal void AddToTransfers(TransferReason transferReason, int value)
         {
-            if (Transfers.TryGetValue(transferReason, out _))
-                Transfers[transferReason] += value;
+            if (_transfers.TryGetValue(transferReason, out _))
+                _transfers[transferReason] += value;
             else
-                Transfers.Add(transferReason, value);
+                _transfers.Add(transferReason, value);
         }
 
         internal int GetTransferedValue(TransferReason transferReason)
         {
-            Transfers.TryGetValue(transferReason, out int val);
+            _transfers.TryGetValue(transferReason, out int val);
             return val;
         }
     }
