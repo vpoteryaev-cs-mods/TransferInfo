@@ -5,23 +5,6 @@ using TransferReason = TransferManager.TransferReason;
 
 namespace TransferInfo.Data
 {
-    //Not all possible combinations are used, but:
-    // 0 - local receive
-    // 1 - local sent
-    // 2 - imported receive
-    // 3 - imported sent
-    // 4 - exported receive
-    // 5 - exported sent
-    [Flags]
-    internal enum TransferConnectionType
-    {
-        Receive = 0x00,
-        Sent = 0x01,
-        Imported = 0x02,
-        Exported = 0x04
-    }
-
-
     internal readonly struct CargoBatch
     {
         internal static readonly int NumConnectionTypes = 6;
