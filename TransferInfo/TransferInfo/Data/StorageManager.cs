@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace TransferInfo.Data
 {
-    internal class StorageManager: SerializableDataExtensionBase
+    public class StorageManager: SerializableDataExtensionBase
     {
         internal static StorageManager Instance { get; private set; }
 
