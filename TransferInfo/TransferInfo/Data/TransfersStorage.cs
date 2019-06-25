@@ -27,6 +27,7 @@ namespace TransferInfo.Data
     /// <summary>
     /// Used as base storage in Dictionary by pairs: TransferReason - Quantity
     /// </summary>
+    [Serializable]
     internal class ReasonTransfersStorage
     {
         //Code in the JoiningByType region is related to Feature https://dev.azure.com/vpoteryaev-cs-mods/TransferInfo/_workitems/edit/10/
@@ -134,6 +135,7 @@ namespace TransferInfo.Data
     /// All transfers in conjunction with ConnectionType:
     ///   Every ConnectionType (by index) refers to ReasonTransfersStorage
     /// </summary>
+    [Serializable]
     internal class ConnectedTransfersStorage
     {
         private readonly ReasonTransfersStorage[] _data;
@@ -174,6 +176,7 @@ namespace TransferInfo.Data
     /// <summary>
     /// Aggregate all transfers by Building
     /// </summary>
+    [Serializable]
     internal class BuildingTransfersStorage
     {
         private readonly Dictionary<ushort, ConnectedTransfersStorage> _data;

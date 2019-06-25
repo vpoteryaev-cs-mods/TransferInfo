@@ -10,16 +10,14 @@ namespace TransferInfo.Data
     ///   index 0: data for the current period
     ///   index 1: data for the previous period
     /// </summary>
+    [Serializable]
     internal class TransfersStatistics
     {
-        internal static TransfersStatistics Instance { get; private set; }
-
         private readonly BuildingTransfersStorage[] _data;
         internal readonly string version;
 
         internal TransfersStatistics(string version)
         {
-            Instance = this;
             _data = new BuildingTransfersStorage[2];
             _data[0] = new BuildingTransfersStorage();
             _data[1] = new BuildingTransfersStorage();

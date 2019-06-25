@@ -63,10 +63,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\CargoBatch.cs" />
+    <Compile Include="Data\StorageManager.cs" />
     <Compile Include="Data\TransfersStatistics.cs" />
     <Compile Include="Data\TransfersStorage.cs" />
     <Compile Include="HarmonyPatches.cs" />
     <Compile Include="ModInfo.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

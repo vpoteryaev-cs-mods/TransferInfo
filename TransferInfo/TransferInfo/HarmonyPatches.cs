@@ -21,9 +21,7 @@ namespace TransferInfo
 
         public static void Apply()
         {
-            //todo: store basic shared values in some common place
-            string sModID = "vlk.TransferInfo";
-            var harmony = HarmonyInstance.Create(sModID);
+            var harmony = HarmonyInstance.Create(Options.HarmonyModID);
 
             var truckSetSource = typeof(CargoTruckAI).GetMethod("SetSource");
             var truckSetSourcePostfix = typeof(HarmonyPatches).GetMethod("CargoTruckAI_PostSetSource");
@@ -42,7 +40,7 @@ namespace TransferInfo
         public static void CargoTruckAI_PostSetSource(ref Vehicle data, ushort sourceBuilding)
         {
             var batch = new CargoBatch(sourceBuilding, false, data.m_transferType, data.m_transferSize, data.m_flags);
-            TransfersStatistics.Instance.AddBatch(batch);
+            StorageManager.Instance.Data.AddBatch(batch);
         }
         
         public static void CargoTruckAI_PreChangeVehicleType(out CargoBatch __state, ref Vehicle vehicleData, PathUnit.Position pathPos, uint laneID)
@@ -58,7 +56,7 @@ namespace TransferInfo
         {
             if (__result)
             {
-                TransfersStatistics.Instance.AddBatch(__state);
+                StorageManager.Instance.Data.AddBatch(__state);
             }
         }
     }
