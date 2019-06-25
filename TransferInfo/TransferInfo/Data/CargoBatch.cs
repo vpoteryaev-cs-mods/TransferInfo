@@ -56,7 +56,7 @@ namespace TransferInfo.Data
                     break;
                 default:
 #if DEBUG
-                    Debug.LogErrorFormat("Unexpected transfer type: {0}", Enum.GetName(typeof(TransferReason), transferReason));
+                    Debug.LogErrorFormat("TransferInfo: CargoBatch.CargoBatch - Unexpected transfer type: {0}", Enum.GetName(typeof(TransferReason), transferReason));
 #endif
                     this.transferReason = TransferReason.None;
                     break;

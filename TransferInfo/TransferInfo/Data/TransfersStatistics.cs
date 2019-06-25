@@ -26,7 +26,9 @@ namespace TransferInfo.Data
 
         internal void AddBatch(CargoBatch cargoBatch)
         {
-            _data[0].AddTransfer(cargoBatch);
+            //note: move check to HarmonyPatches
+            if (cargoBatch.buildingID != 0 && BuildingManager.instance.m_buildings.m_buffer[cargoBatch.buildingID].Info.m_buildingAI is CargoStationAI)
+                _data[0].AddTransfer(cargoBatch);
         }
     }
 }

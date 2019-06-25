@@ -74,7 +74,7 @@ namespace TransferInfo.Data
             }
             catch (SerializationException e)
             {
-                Debug.LogError("TransferInfo: StorageManager.OnLoadData - Failed to serialize. Reason: " + e.Message);
+                Debug.LogError("TransferInfo: StorageManager.OnSaveData - Failed to serialize. Reason: " + e.Message);
                 //throw;
             }
             //finally
