@@ -12,7 +12,7 @@ namespace TransferInfo
             if (harmony.GetPatchInfo(method)?.Owners?.Contains(harmony.Id) == true)
             {
 #if DEBUG
-                Debug.LogWarningFormat("Harmony patches already present for {0}", string.Format("{0}.{1}", method.ReflectedType?.Name ?? "(null)", method.Name));
+                Debug.LogWarningFormat("TransferInfo: HarmonyPatches.ConditionalPatch - Harmony patches already present for {0}", string.Format("{0}.{1}", method.ReflectedType?.Name ?? "(null)", method.Name));
 #endif
                 return;
             }
@@ -33,7 +33,7 @@ namespace TransferInfo
             ConditionalPatch(harmony, truckSetSource, null, new HarmonyMethod(truckSetSourcePostfix));
             ConditionalPatch(harmony, truckChangeVehicleType, new HarmonyMethod(truckChangeVehicleTypePrefix), new HarmonyMethod(truckChangeVehicleTypePostfix));
 #if DEBUG
-            Debug.Log("Harmony patches applied");
+            Debug.Log("TransferInfo: HarmonyPatches.Apply - Harmony patches applied");
 #endif
         }
 
