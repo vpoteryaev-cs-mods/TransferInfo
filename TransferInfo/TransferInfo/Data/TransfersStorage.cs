@@ -7,11 +7,31 @@ using TransferReason = TransferManager.TransferReason;
 
 namespace TransferInfo.Data
 {
-    //used as storage by pairs: TransferReason - Quantity
-    internal class TransfersStorage
+    //Not all possible combinations are used, but:
+    // 0 - local receive
+    // 1 - local sent
+    // 2 - imported receive
+    // 3 - imported sent
+    // 4 - exported receive
+    // 5 - exported sent
+    [Flags]
+    internal enum TransferConnectionType
     {
-        //Code in the JoiningByType region is related to Note https://github.com/vpoteryaev/CS-TransferInfo/projects/1#card-23084985
+        Receive = 0x00,
+        Sent = 0x01,
+        Imported = 0x02,
+        Exported = 0x04
+    }
+
+
+    /// <summary>
+    /// Used as base storage in Dictionary by pairs: TransferReason - Quantity
+    /// </summary>
+    internal class ReasonTransfersStorage
+    {
+        //Code in the JoiningByType region is related to Feature https://dev.azure.com/vpoteryaev-cs-mods/TransferInfo/_workitems/edit/10/
         #region JoiningByType
+        
         internal static readonly HashSet<TransferReason> GarbageTypes = new HashSet<TransferReason>()
         {
             TransferReason.Garbage,
@@ -37,6 +57,7 @@ namespace TransferInfo.Data
         internal static readonly HashSet<TransferReason> ForestryTypes = new HashSet<TransferReason>()
         {
             TransferReason.Lumber,
+            TransferReason.Logs,
             TransferReason.Paper,
             TransferReason.PlanedTimber
         };
@@ -44,6 +65,7 @@ namespace TransferInfo.Data
         internal static readonly HashSet<TransferReason> AgricultureTypes = new HashSet<TransferReason>()
         {
             TransferReason.Grain,
+            TransferReason.Food,
             TransferReason.AnimalProducts,
             TransferReason.Flours
         };
@@ -51,7 +73,6 @@ namespace TransferInfo.Data
         internal static readonly HashSet<TransferReason> GoodsTypes = new HashSet<TransferReason>()
         {
             TransferReason.Goods,
-            TransferReason.Food,
             TransferReason.LuxuryProducts
         };
 
@@ -73,33 +94,107 @@ namespace TransferInfo.Data
         internal int GetTransferedSum(HashSet<TransferReason> reasons)
         {
             var query =
-                from Transfer in Transfers
+                from Transfer in _data
                 join types in reasons on Transfer.Key equals types
                 select Transfer.Value;
             return query.Sum();
         }
+        
         #endregion
 
-        private readonly Dictionary<TransferReason, int> Transfers;
+        private readonly Dictionary<TransferReason, int> _data;
 
-
-        internal TransfersStorage()
+        internal ReasonTransfersStorage()
         {
-            Transfers = new Dictionary<TransferReason, int>();
+            _data = new Dictionary<TransferReason, int>();
         }
 
-        internal void AddToTransfers(TransferReason transferReason, int value)
+        internal ReasonTransfersStorage(TransferReason transferReason, int quantity)
         {
-            if (Transfers.TryGetValue(transferReason, out _))
-                Transfers[transferReason] += value;
+            _data = new Dictionary<TransferReason, int>();
+            AddTransfer(transferReason, quantity);
+        }
+
+        internal void AddTransfer(TransferReason transferReason, int value)
+        {
+            if (_data.TryGetValue(transferReason, out _))
+                _data[transferReason] += value;
             else
-                Transfers.Add(transferReason, value);
+                _data.Add(transferReason, value);
         }
 
         internal int GetTransferedValue(TransferReason transferReason)
         {
-            Transfers.TryGetValue(transferReason, out int val);
+            _data.TryGetValue(transferReason, out int val);
             return val;
+        }
+    }
+
+    /// <summary>
+    /// All transfers in conjunction with ConnectionType:
+    ///   Every ConnectionType (by index) refers to ReasonTransfersStorage
+    /// </summary>
+    internal class ConnectedTransfersStorage
+    {
+        private readonly ReasonTransfersStorage[] _data;
+        //internal ReasonTransfersStorage[] Transfers { get { return _data; } }
+
+        internal ConnectedTransfersStorage()
+        {
+            _data = new ReasonTransfersStorage[CargoBatch.NumConnectionTypes];
+            Init();
+        }
+
+        internal ConnectedTransfersStorage(TransferConnectionType transferConnectionType, TransferReason transferReason, int quantity)
+        {
+            _data = new ReasonTransfersStorage[CargoBatch.NumConnectionTypes];
+            Init();
+            AddTransfer(transferConnectionType, transferReason, quantity);
+        }
+
+        private void Init()
+        {
+            for (int i = 0; i < CargoBatch.NumConnectionTypes; i++)
+                _data[i] = new ReasonTransfersStorage();
+        }
+        
+        internal void AddTransfer(TransferConnectionType transferConnection, TransferReason transferReason, int quantity)
+        {
+            _data[(int)transferConnection].AddTransfer(transferReason, quantity);
+        }
+        
+        /*
+        internal TransfersStorage GetStorageByType(TransferConnectionType type)
+        {
+            return Transfers[(int)type];
+        }
+        */
+    }
+
+    /// <summary>
+    /// Aggregate all transfers by Building
+    /// </summary>
+    internal class BuildingTransfersStorage
+    {
+        private readonly Dictionary<ushort, ConnectedTransfersStorage> _data;
+        //internal Dictionary<ushort, ConnectedTransfersStorage> BuildingData { get { return _data; } }
+
+        internal BuildingTransfersStorage()
+        {
+             _data = new Dictionary<ushort, ConnectedTransfersStorage>();
+        }
+
+        internal void AddTransfer(CargoBatch cargoBatch)
+        {
+            if (_data.TryGetValue(cargoBatch.buildingID, out ConnectedTransfersStorage connectedTransfers))
+            {
+                connectedTransfers.AddTransfer(cargoBatch.transferConnectionType, cargoBatch.transferReason, cargoBatch.transferSize);
+            }
+            else
+            {
+                connectedTransfers = new ConnectedTransfersStorage(cargoBatch.transferConnectionType, cargoBatch.transferReason, cargoBatch.transferSize);
+                _data.Add(cargoBatch.buildingID, connectedTransfers);
+            }
         }
     }
 }

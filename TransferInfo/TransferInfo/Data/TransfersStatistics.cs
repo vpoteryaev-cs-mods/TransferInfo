@@ -5,24 +5,30 @@ using System.Text;
 
 namespace TransferInfo.Data
 {
-    //All transfers in conjunction with ConnectionType
+    /// <summary>
+    /// Final data aggregation and management
+    ///   index 0: data for the current period
+    ///   index 1: data for the previous period
+    /// </summary>
     internal class TransfersStatistics
     {
-        internal TransfersStorage[] Transfers { get; }
+        internal static TransfersStatistics Instance { get; private set; }
 
-        internal TransfersStatistics()
+        private readonly BuildingTransfersStorage[] _data;
+        internal readonly string version;
+
+        internal TransfersStatistics(string version)
         {
-            int numConnectionTypes = (int)Enum.GetValues(typeof(TransferConnectionType)).Cast<TransferConnectionType>().Aggregate((v, agg) => agg | v) + 1;
-            Transfers = new TransfersStorage[numConnectionTypes];
-            for (int i = 0; i < numConnectionTypes; i++)
-                Transfers[i] = new TransfersStorage();
+            Instance = this;
+            _data = new BuildingTransfersStorage[2];
+            _data[0] = new BuildingTransfersStorage();
+            _data[1] = new BuildingTransfersStorage();
+            this.version = version;
         }
 
-        /*
-        internal TransfersStorage GetStorageByType(TransferConnectionType type)
+        internal void AddBatch(CargoBatch cargoBatch)
         {
-            return Transfers[(int)type];
+            _data[0].AddTransfer(cargoBatch);
         }
-        */
     }
 }
