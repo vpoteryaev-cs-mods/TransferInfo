@@ -40,7 +40,7 @@ namespace TransferInfo
                 var tempData = formatter.Deserialize(stream);
                 if (tempData is TransfersStatistics tempStorageData)
                     if (tempStorageData.version == Options.StorageVersion)
-                        Loader.Data = tempStorageData;
+                        DataShared.Data = tempStorageData;
                     else
                     {
                         CleanData(false);
@@ -79,7 +79,7 @@ namespace TransferInfo
             BinaryFormatter formatter = new BinaryFormatter();
             try
             {
-                formatter.Serialize(stream, Loader.Data);
+                formatter.Serialize(stream, DataShared.Data);
             }
             catch (SerializationException e)
             {

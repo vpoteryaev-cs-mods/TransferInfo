@@ -7,8 +7,6 @@ namespace TransferInfo.Data
 {
     internal readonly struct CargoBatch
     {
-        internal static readonly int NumConnectionTypes = 6;
-
         internal readonly ushort buildingID;
         internal readonly ushort transferSize;
         internal readonly TransferConnectionType transferConnectionType;
@@ -23,6 +21,17 @@ namespace TransferInfo.Data
             else if ((flags & Vehicle.Flags.Importing) != 0)
                 transferConnectionType |= TransferConnectionType.Imported;
 
+            if (DataShared.TrackedCargoTypes.Contains(transferReason))
+                this.transferReason = (TransferReason)transferReason;
+            else
+            {
+#if DEBUG
+                Debug.LogErrorFormat("TransferInfo: CargoBatch.CargoBatch - Unexpected transfer type: {0}", Enum.GetName(typeof(TransferReason), transferReason));
+#endif
+                this.transferReason = TransferReason.None;
+
+            }
+            /*
             switch ((TransferReason)transferReason)
             {
                 case TransferReason.Garbage:
@@ -61,6 +70,7 @@ namespace TransferInfo.Data
                     this.transferReason = TransferReason.None;
                     break;
             }
+            */
         }
     }
 }

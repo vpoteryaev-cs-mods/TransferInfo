@@ -33,7 +33,7 @@ namespace TransferInfo
 #if DEBUG
                 Debug.Log("TransferInfo: Hooking.displayStatisticsHandler - I'm Called");
 #endif
-                //todo: show Stats window
+                Loader.TransfersStatisticsPanel.Show();
             };
 
             if (!HookManager.IsHooked(displayStatisticsHandler, statsHookedPanel))

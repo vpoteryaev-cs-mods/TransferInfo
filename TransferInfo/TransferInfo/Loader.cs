@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ICities;
+using ColossalFramework.UI;
+using UnityEngine;
 using TransferInfo.Data;
 
 namespace TransferInfo
@@ -10,14 +12,14 @@ namespace TransferInfo
     public class Loader: LoadingExtensionBase
     {
         internal static bool IsActive { get; private set; }
-        internal static TransfersStatistics Data { get; set; }
 
+        internal static UI.TransfersStatisticsPanel TransfersStatisticsPanel;
         public override void OnCreated(ILoading loading)
         {
             base.OnCreated(loading);
 
             if (loading.currentMode != AppMode.Game) return;
-            Data = new TransfersStatistics(Options.StorageVersion);
+            DataShared.Data = new TransfersStatistics(Options.StorageVersion);
             HarmonyPatches.Apply();
             IsActive = true;
         }
@@ -32,6 +34,7 @@ namespace TransferInfo
                 return;
             }
             //todo: ui, panels hooking etc.
+            TransfersStatisticsPanel = (UI.TransfersStatisticsPanel)UIView.GetAView().AddUIComponent(typeof(UI.TransfersStatisticsPanel));
             Hooking.Setup();
         }
 
@@ -40,6 +43,8 @@ namespace TransferInfo
             base.OnLevelUnloading();
 
             //todo: free resources from custom ui
+            if (TransfersStatisticsPanel != null) GameObject.Destroy(TransfersStatisticsPanel);
+            TransfersStatisticsPanel = null;
         }
 
         public override void OnReleased()
@@ -47,7 +52,7 @@ namespace TransferInfo
             base.OnReleased();
 
             //note: Harmony does not provide 'un-patching'
-            Data = null;
+            DataShared.Data = null;
             IsActive = false;
         }
     }
