@@ -63,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\CargoBatch.cs" />
-    <Compile Include="Data\StorageManager.cs" />
     <Compile Include="Data\TransfersStatistics.cs" />
     <Compile Include="Data\TransfersStorage.cs" />
     <Compile Include="HarmonyPatches.cs" />
@@ -71,7 +70,9 @@
     <Compile Include="ModInfo.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization.cs" />
     <Compile Include="Threading.cs" />
+    <Compile Include="UI\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
