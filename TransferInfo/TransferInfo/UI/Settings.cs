@@ -15,7 +15,7 @@ namespace TransferInfo.UI
         internal static void OnSettingsUI(UIHelperBase helper)
         {
             var group = helper.AddGroup(_info);
-            group.AddButton("Clean data", () => { Serialization.CleanData(); });
+            group.AddButton("Clean data", () => { Serialization.CleanData(); Hooking.Cleanup(); });
         }
     }
 }

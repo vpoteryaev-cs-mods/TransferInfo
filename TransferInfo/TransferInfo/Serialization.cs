@@ -41,12 +41,20 @@ namespace TransferInfo
                 if (tempData is TransfersStatistics tempStorageData)
                     if (tempStorageData.version == Options.StorageVersion)
                         Loader.Data = tempStorageData;
-#if DEBUG
                     else
+                    {
+                        CleanData(false);
+#if DEBUG
                         Debug.Log("TransferInfo: StorageManager.OnLoadData - wrong version.");
+#endif
+                    }
                 else
+                {
+                    CleanData(false);
+#if DEBUG
                     Debug.Log("TransferInfo: StorageManager.OnLoadData - wrong data format.");
 #endif
+                }
             }
             catch (SerializationException e)
             {
@@ -91,9 +99,9 @@ namespace TransferInfo
         //    base.OnReleased();
         //}
 
-        internal static void CleanData()
+        internal static void CleanData(bool preventSave = true)
         {
-            Options.Cleaning = true;
+            Options.Cleaning = preventSave;
 
             if (SimulationManager.instance.m_serializableDataStorage.ContainsKey(Options.GameStorageID))
             {
