@@ -26,12 +26,13 @@ namespace TransferInfo
         {
             base.OnLevelLoaded(mode);
 
-            if (mode != LoadMode.LoadGame || mode != LoadMode.NewGame || mode != LoadMode.NewGameFromScenario)
+            if (mode != LoadMode.LoadGame && mode != LoadMode.NewGame && mode != LoadMode.NewGameFromScenario)
             {
                 //note: I won't to perform checks about reloading the game. Be advised - quitting to Desktop must be performed before every new load.
                 return;
             }
             //todo: ui, panels hooking etc.
+            Hooking.Setup();
         }
 
         public override void OnLevelUnloading()
