@@ -49,6 +49,10 @@
       <HintPath>..\..\Libs\ICities.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PanelHook">
+      <HintPath>..\..\Libs\PanelHook.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -63,15 +67,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\CargoBatch.cs" />
-    <Compile Include="Data\StorageManager.cs" />
     <Compile Include="Data\TransfersStatistics.cs" />
     <Compile Include="Data\TransfersStorage.cs" />
     <Compile Include="HarmonyPatches.cs" />
+    <Compile Include="Hooking.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="ModInfo.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization.cs" />
     <Compile Include="Threading.cs" />
+    <Compile Include="UI\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

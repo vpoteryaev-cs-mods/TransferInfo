@@ -10,5 +10,10 @@ namespace TransferInfo
     {
         public string Name => "Transfer Info";
         public string Description => "bla-bla-bla";
+
+        public void OnSettingsUI(UIHelperBase helper)
+        {
+            UI.Settings.OnSettingsUI(helper);
+        }
     }
 }

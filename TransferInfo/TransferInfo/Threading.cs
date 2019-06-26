@@ -12,21 +12,22 @@ namespace TransferInfo
 {
     public class Threading: ThreadingExtensionBase
     {
-        public override void OnCreated(IThreading threading)
-        {
-            base.OnCreated(threading);
+        //public override void OnCreated(IThreading threading)
+        //{
+        //    base.OnCreated(threading);
+        //}
 
-            HarmonyPatches.Apply();
-        }
-
-        public override void OnReleased()
-        {
-            base.OnReleased();
-        }
+        //public override void OnReleased()
+        //{
+        //    base.OnReleased();
+        //}
 
         public override void OnUpdate(float realTimeDelta, float simulationTimeDelta)
         {
             base.OnUpdate(realTimeDelta, simulationTimeDelta);
+
+            if (!Loader.IsActive) return;
+            //todo: update stuff
         }
     }
 }
