@@ -34,32 +34,36 @@ namespace TransferInfo.Data
                 _data[0].AddTransfer(cargoBatch);
         }
 
+        //note: returning values as Critical Error codes: -1 and -2 - initialization was failed.
+        //  This checks only for early stages of development and have to be deleted after first tests
+        //returning -3 is normal and only for tests with Original ModInfo statistics panel.
         internal int GetBuildingTransfersStorage(int period, ushort buildingID, TransferConnectionType transferConnectionType, TransferReason transferReason)
         {
             int result = 0;
             BuildingTransfersStorage buildingTransfersStorage = _data[period];
-            if(buildingTransfersStorage == null)
-            {
 #if DEBUG
+            if (buildingTransfersStorage == null)
+            {
                 Debug.LogError("TransferInfo: TransferStatistics.GetBuildingTransfersStorage - buildingTransfersStorage is null");
-                return result;
-#endif
+                return -1;
             }
-            if(buildingTransfersStorage.GetData().TryGetValue(buildingID, out ConnectedTransfersStorage connectedTransfersStorage))
+#endif
+            if (buildingTransfersStorage.GetData().TryGetValue(buildingID, out ConnectedTransfersStorage connectedTransfersStorage))
             {
 #if DEBUG
                 Debug.LogFormat("TransferInfo: TransferStatistics.GetBuildingTransfersStorage - for building {0} there is no data", buildingID);
 #endif
-                return result;
+                //return result;
+                return -3;
             }
             ReasonTransfersStorage reasonTransfersStorage = connectedTransfersStorage.GetStorageByType(transferConnectionType);
+#if DEBUG
             if (reasonTransfersStorage == null)
             {
-#if DEBUG
                 Debug.LogErrorFormat("TransferInfo: TransferStatistics.GetBuildingTransfersStorage - reasonTransfersStorage is null for building {0}", buildingID);
-#endif
-                return result;
+                return -2;
             }
+#endif
             result = reasonTransfersStorage.GetTransferedValue(transferReason);
 
             return result;
