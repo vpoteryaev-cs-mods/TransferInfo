@@ -48,7 +48,8 @@ namespace TransferInfo.Data
                 return -1;
             }
 #endif
-            if (buildingTransfersStorage.GetData().TryGetValue(buildingID, out ConnectedTransfersStorage connectedTransfersStorage))
+            ConnectedTransfersStorage connectedTransfersStorage = buildingTransfersStorage.GetBuildingData(buildingID);
+            if (connectedTransfersStorage == null)
             {
 #if DEBUG
                 Debug.LogFormat("TransferInfo: TransferStatistics.GetBuildingTransfersStorage - for building {0} there is no data", buildingID);

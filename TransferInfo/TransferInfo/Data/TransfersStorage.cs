@@ -181,6 +181,12 @@ namespace TransferInfo.Data
             }
         }
 
+        internal ConnectedTransfersStorage GetBuildingData(ushort buildingID)
+        {
+            _data.TryGetValue(buildingID, out ConnectedTransfersStorage result);
+            return result;
+        }
+
         internal Dictionary<ushort, ConnectedTransfersStorage> GetData()
         {
             return _data;
