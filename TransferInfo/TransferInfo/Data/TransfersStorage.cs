@@ -165,7 +165,7 @@ namespace TransferInfo.Data
 
         internal BuildingTransfersStorage()
         {
-             _data = new Dictionary<ushort, ConnectedTransfersStorage>();
+            _data = new Dictionary<ushort, ConnectedTransfersStorage>();
         }
 
         internal void AddTransfer(CargoBatch cargoBatch)
@@ -185,11 +185,6 @@ namespace TransferInfo.Data
         {
             _data.TryGetValue(buildingID, out ConnectedTransfersStorage result);
             return result;
-        }
-
-        internal Dictionary<ushort, ConnectedTransfersStorage> GetData()
-        {
-            return _data;
         }
     }
 }

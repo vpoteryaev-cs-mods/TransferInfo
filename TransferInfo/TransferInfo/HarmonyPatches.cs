@@ -32,9 +32,6 @@ namespace TransferInfo
 
             ConditionalPatch(harmony, truckSetSource, null, new HarmonyMethod(truckSetSourcePostfix));
             ConditionalPatch(harmony, truckChangeVehicleType, new HarmonyMethod(truckChangeVehicleTypePrefix), new HarmonyMethod(truckChangeVehicleTypePostfix));
-#if DEBUG
-            Debug.Log("TransferInfo: HarmonyPatches.Apply - Harmony patches applied");
-#endif
         }
 
         public static void CargoTruckAI_PostSetSource(ref Vehicle data, ushort sourceBuilding)

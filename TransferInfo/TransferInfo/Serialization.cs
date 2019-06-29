@@ -28,9 +28,6 @@ namespace TransferInfo
             var data = serializableDataManager.LoadData(Options.GameStorageID);
             if (data == null)
             {
-#if DEBUG
-                Debug.Log("TransferInfo: StorageManager.OnLoadData - data in saved game not found.");
-#endif
                 return;
             }
             MemoryStream stream = new MemoryStream(data);
@@ -44,16 +41,14 @@ namespace TransferInfo
                     else
                     {
                         CleanData(false);
-#if DEBUG
-                        Debug.Log("TransferInfo: StorageManager.OnLoadData - wrong version.");
-#endif
+                        if(Options.debugEnabled)
+                            Debug.LogError("TransferInfo: StorageManager.OnLoadData - wrong version.");
                     }
                 else
                 {
                     CleanData(false);
-#if DEBUG
-                    Debug.Log("TransferInfo: StorageManager.OnLoadData - wrong data format.");
-#endif
+                    if (Options.debugEnabled)
+                        Debug.LogError("TransferInfo: StorageManager.OnLoadData - wrong data format.");
                 }
             }
             catch (SerializationException e)
@@ -104,16 +99,7 @@ namespace TransferInfo
             Options.Cleaning = preventSave;
 
             if (SimulationManager.instance.m_serializableDataStorage.ContainsKey(Options.GameStorageID))
-            {
                 SimulationManager.instance.m_SerializableDataWrapper.EraseData(Options.GameStorageID);
-#if DEBUG
-                Debug.LogFormat("TransferInfo: StorageManager.CleanData - '{0}' data removed from savegame file", Options.GameStorageID);
-#endif
-            }
-#if DEBUG
-            else
-                Debug.LogFormat("TransferInfo: StorageManager.CleanData - '{0}' data not present in savegame file", Options.GameStorageID);
-#endif
         }
     }
 }

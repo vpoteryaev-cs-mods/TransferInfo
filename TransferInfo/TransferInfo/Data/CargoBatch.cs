@@ -25,52 +25,11 @@ namespace TransferInfo.Data
                 this.transferReason = (TransferReason)transferReason;
             else
             {
-#if DEBUG
-                Debug.LogErrorFormat("TransferInfo: CargoBatch.CargoBatch - Unexpected transfer type: {0}", Enum.GetName(typeof(TransferReason), transferReason));
-#endif
+                if(Options.debugEnabled)
+                    Debug.LogErrorFormat("TransferInfo: CargoBatch.CargoBatch - Unexpected transfer type: {0}", Enum.GetName(typeof(TransferReason), transferReason));
                 this.transferReason = TransferReason.None;
 
             }
-            /*
-            switch ((TransferReason)transferReason)
-            {
-                case TransferReason.Garbage:
-                case TransferReason.GarbageMove:
-                case TransferReason.Oil:
-                case TransferReason.Petrol:
-                case TransferReason.Petroleum:
-                case TransferReason.Plastics:
-                case TransferReason.Ore:
-                case TransferReason.Coal:
-                case TransferReason.Glass:
-                case TransferReason.Metals:
-                case TransferReason.Logs:
-                case TransferReason.Lumber:
-                case TransferReason.Paper:
-                case TransferReason.PlanedTimber:
-                case TransferReason.Grain:
-                case TransferReason.Food:
-                case TransferReason.AnimalProducts:
-                case TransferReason.Flours:
-                case TransferReason.Goods:
-                case TransferReason.LuxuryProducts:
-                case TransferReason.Snow:
-                case TransferReason.SnowMove:
-                case TransferReason.Mail:
-                case TransferReason.UnsortedMail:
-                case TransferReason.SortedMail:
-                case TransferReason.OutgoingMail:
-                case TransferReason.IncomingMail:
-                    this.transferReason = (TransferReason)transferReason;
-                    break;
-                default:
-#if DEBUG
-                    Debug.LogErrorFormat("TransferInfo: CargoBatch.CargoBatch - Unexpected transfer type: {0}", Enum.GetName(typeof(TransferReason), transferReason));
-#endif
-                    this.transferReason = TransferReason.None;
-                    break;
-            }
-            */
         }
     }
 }

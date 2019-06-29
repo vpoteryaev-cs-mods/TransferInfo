@@ -16,6 +16,8 @@ namespace TransferInfo.UI
         {
             var group = helper.AddGroup(_info);
             group.AddButton("Clean data", () => { Serialization.CleanData(); Hooking.Cleanup(); });
+            var debugGroup = helper.AddGroup("Debug");
+            debugGroup.AddCheckbox("Enable debug logging", Options.debugEnabled, state => Options.debugEnabled.value = state);
         }
     }
 }

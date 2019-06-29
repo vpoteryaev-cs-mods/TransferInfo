@@ -12,8 +12,7 @@ namespace TransferInfo
     public class Loader: LoadingExtensionBase
     {
         internal static bool IsActive { get; private set; }
-
-        internal static UI.TransfersStatisticsPanel TransfersStatisticsPanel;
+        internal static UI.TransfersStatisticsPanel TransfersStatisticsPanel { get; private set; }
         public override void OnCreated(ILoading loading)
         {
             base.OnCreated(loading);
@@ -33,7 +32,6 @@ namespace TransferInfo
                 //note: I won't to perform checks about reloading the game. Be advised - quitting to Desktop must be performed before every new load.
                 return;
             }
-            //todo: ui, panels hooking etc.
             TransfersStatisticsPanel = (UI.TransfersStatisticsPanel)UIView.GetAView().AddUIComponent(typeof(UI.TransfersStatisticsPanel));
             Hooking.Setup();
         }
@@ -42,7 +40,6 @@ namespace TransferInfo
         {
             base.OnLevelUnloading();
 
-            //todo: free resources from custom ui
             if (TransfersStatisticsPanel != null) GameObject.Destroy(TransfersStatisticsPanel);
             TransfersStatisticsPanel = null;
         }
