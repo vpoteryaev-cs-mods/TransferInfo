@@ -203,7 +203,7 @@ namespace TransferInfo.UI
                 int[] buildingData = GetBuildingTransferedValues(lastSelectedBuilding, (TransferConnectionType)i);
                 int categoryTotal = buildingData.Sum();
 
-                labels[i].text = string.Format("{0:0}{1}", categoryTotal / 1000, "Kg");
+                labels[i].text = string.Format("{0:0}{1}", categoryTotal / 1000, "K Units");
 
                 if (categoryTotal == 0)
                 {

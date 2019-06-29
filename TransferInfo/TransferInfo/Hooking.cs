@@ -32,6 +32,7 @@ namespace TransferInfo
             displayStatisticsHandler = (sender, e) =>
             {
                 Loader.TransfersStatisticsPanel.Show();
+                Loader.OrigCargoInfoPanel.Show();
             };
 
             if (!HookManager.IsHooked(displayStatisticsHandler, statsHookedPanel))
