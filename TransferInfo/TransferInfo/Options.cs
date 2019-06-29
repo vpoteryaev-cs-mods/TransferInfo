@@ -12,6 +12,8 @@ namespace TransferInfo
         public static readonly string GameStorageID = "vlk.TransferInfo.GameStorage";
         public static readonly string StorageVersion = "1.0.0.0";
         internal static bool Cleaning = false;
-        internal static SavedBool debugEnabled = new SavedBool("debugEnabled", Settings.gameSettingsFile);
+        private static readonly string SettingsFileName = "TransferInfoSettings";
+        internal static SavedBool debugEnabled = new SavedBool("debugEnabled", SettingsFileName);
+        internal static SavedBool useHourlyUpdates = new SavedBool("useHourlyUpdates", SettingsFileName);
     }
 }

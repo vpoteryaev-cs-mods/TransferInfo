@@ -42,5 +42,12 @@ namespace TransferInfo.Data
                 return -1;
             return connectedTransfersStorage.GetStorageByType(transferConnectionType).GetTransferedValue(transferReason);
         }
+
+        internal void UpdateStatistics()
+        {
+            //todo: check data swaping
+            _data[1] = _data[0];
+            _data[0] = new BuildingTransfersStorage();
+        }
     }
 }
