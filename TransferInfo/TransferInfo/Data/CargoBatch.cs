@@ -5,7 +5,7 @@ using TransferReason = TransferManager.TransferReason;
 
 namespace TransferInfo.Data
 {
-    internal readonly struct CargoBatch
+    internal class CargoBatch
     {
         internal readonly ushort buildingID;
         internal readonly ushort transferSize;

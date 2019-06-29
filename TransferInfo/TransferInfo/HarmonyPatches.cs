@@ -36,8 +36,11 @@ namespace TransferInfo
 
         public static void CargoTruckAI_PostSetSource(ref Vehicle data, ushort sourceBuilding)
         {
-            var batch = new CargoBatch(sourceBuilding, false, data.m_transferType, data.m_transferSize, data.m_flags);
-            DataShared.Data.AddBatch(batch);
+            if (sourceBuilding != 0 && BuildingManager.instance.m_buildings.m_buffer[sourceBuilding].Info.m_buildingAI is CargoStationAI)
+            {
+                var batch = new CargoBatch(sourceBuilding, false, data.m_transferType, data.m_transferSize, data.m_flags);
+                DataShared.Data.AddBatch(batch);
+            }
         }
         
         public static void CargoTruckAI_PreChangeVehicleType(out CargoBatch __state, ref Vehicle vehicleData, PathUnit.Position pathPos, uint laneID)
@@ -46,12 +49,15 @@ namespace TransferInfo
             NetInfo info = NetManager.instance.m_segments.m_buffer[pathPos.m_segment].Info;
             ushort buildingID = BuildingManager.instance.FindBuilding(vector, 100f, info.m_class.m_service, ItemClass.SubService.None, Building.Flags.None, Building.Flags.None);
 
-            __state = new CargoBatch(buildingID, true, vehicleData.m_transferType, vehicleData.m_transferSize, vehicleData.m_flags);
+            if (buildingID != 0 && BuildingManager.instance.m_buildings.m_buffer[buildingID].Info.m_buildingAI is CargoStationAI)
+                __state = new CargoBatch(buildingID, true, vehicleData.m_transferType, vehicleData.m_transferSize, vehicleData.m_flags);
+            else
+                __state = null;
         }
 
         public static void CargoTruckAI_PostChangeVehicleType(bool __result, ref CargoBatch __state)
         {
-            if (__result)
+            if (__result && __state != null)
             {
                 DataShared.Data.AddBatch(__state);
             }
