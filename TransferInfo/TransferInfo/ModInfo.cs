@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ICities;
+using ColossalFramework;
+using UnityEngine;
 
 namespace TransferInfo
 {
@@ -11,6 +13,17 @@ namespace TransferInfo
         public string Name => "Transfer Info";
         public string Description => "bla-bla-bla";
 
+        public ModInfo()
+        {
+            try
+            {
+                GameSettings.AddSettingsFile(new SettingsFile { fileName = Options.SettingsFileName });
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
         public void OnSettingsUI(UIHelperBase helper)
         {
             UI.Settings.OnSettingsUI(helper);
