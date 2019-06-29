@@ -7,8 +7,6 @@ namespace TransferInfo.Data
 {
     internal readonly struct CargoBatch
     {
-        internal static readonly int NumConnectionTypes = 6;
-
         internal readonly ushort buildingID;
         internal readonly ushort transferSize;
         internal readonly TransferConnectionType transferConnectionType;
@@ -23,43 +21,14 @@ namespace TransferInfo.Data
             else if ((flags & Vehicle.Flags.Importing) != 0)
                 transferConnectionType |= TransferConnectionType.Imported;
 
-            switch ((TransferReason)transferReason)
+            if (DataShared.TrackedCargoTypes.Contains(transferReason))
+                this.transferReason = (TransferReason)transferReason;
+            else
             {
-                case TransferReason.Garbage:
-                case TransferReason.GarbageMove:
-                case TransferReason.Oil:
-                case TransferReason.Petrol:
-                case TransferReason.Petroleum:
-                case TransferReason.Plastics:
-                case TransferReason.Ore:
-                case TransferReason.Coal:
-                case TransferReason.Glass:
-                case TransferReason.Metals:
-                case TransferReason.Logs:
-                case TransferReason.Lumber:
-                case TransferReason.Paper:
-                case TransferReason.PlanedTimber:
-                case TransferReason.Grain:
-                case TransferReason.Food:
-                case TransferReason.AnimalProducts:
-                case TransferReason.Flours:
-                case TransferReason.Goods:
-                case TransferReason.LuxuryProducts:
-                case TransferReason.Snow:
-                case TransferReason.SnowMove:
-                case TransferReason.Mail:
-                case TransferReason.UnsortedMail:
-                case TransferReason.SortedMail:
-                case TransferReason.OutgoingMail:
-                case TransferReason.IncomingMail:
-                    this.transferReason = (TransferReason)transferReason;
-                    break;
-                default:
-#if DEBUG
+                if(Options.debugEnabled)
                     Debug.LogErrorFormat("TransferInfo: CargoBatch.CargoBatch - Unexpected transfer type: {0}", Enum.GetName(typeof(TransferReason), transferReason));
-#endif
-                    this.transferReason = TransferReason.None;
-                    break;
+                this.transferReason = TransferReason.None;
+
             }
         }
     }

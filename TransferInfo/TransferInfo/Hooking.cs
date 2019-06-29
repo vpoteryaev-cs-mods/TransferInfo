@@ -22,7 +22,8 @@ namespace TransferInfo
             statsHookedPanel = servicePanel?.Find<UIPanel>("Right");
             if (servicePanel == null || statsHookedPanel == null)
             {
-                Debug.LogError("TransferInfo: Hooking.Setup - Hooking targets have to be checked");
+                if(Options.debugEnabled)
+                    Debug.LogError("TransferInfo: Hooking.Setup - Hooking targets have to be checked");
                 return;
             }
 #if DEBUG
@@ -30,10 +31,7 @@ namespace TransferInfo
 #endif
             displayStatisticsHandler = (sender, e) =>
             {
-#if DEBUG
-                Debug.Log("TransferInfo: Hooking.displayStatisticsHandler - I'm Called");
-#endif
-                //todo: show Stats window
+                Loader.TransfersStatisticsPanel.Show();
             };
 
             if (!HookManager.IsHooked(displayStatisticsHandler, statsHookedPanel))

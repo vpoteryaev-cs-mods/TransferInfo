@@ -32,15 +32,12 @@ namespace TransferInfo
 
             ConditionalPatch(harmony, truckSetSource, null, new HarmonyMethod(truckSetSourcePostfix));
             ConditionalPatch(harmony, truckChangeVehicleType, new HarmonyMethod(truckChangeVehicleTypePrefix), new HarmonyMethod(truckChangeVehicleTypePostfix));
-#if DEBUG
-            Debug.Log("TransferInfo: HarmonyPatches.Apply - Harmony patches applied");
-#endif
         }
 
         public static void CargoTruckAI_PostSetSource(ref Vehicle data, ushort sourceBuilding)
         {
             var batch = new CargoBatch(sourceBuilding, false, data.m_transferType, data.m_transferSize, data.m_flags);
-            Loader.Data.AddBatch(batch);
+            DataShared.Data.AddBatch(batch);
         }
         
         public static void CargoTruckAI_PreChangeVehicleType(out CargoBatch __state, ref Vehicle vehicleData, PathUnit.Position pathPos, uint laneID)
@@ -56,7 +53,7 @@ namespace TransferInfo
         {
             if (__result)
             {
-                Loader.Data.AddBatch(__state);
+                DataShared.Data.AddBatch(__state);
             }
         }
     }

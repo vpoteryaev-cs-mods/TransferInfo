@@ -7,23 +7,6 @@ using TransferReason = TransferManager.TransferReason;
 
 namespace TransferInfo.Data
 {
-    //Not all possible combinations are used, but:
-    // 0 - local receive
-    // 1 - local sent
-    // 2 - imported receive
-    // 3 - imported sent
-    // 4 - exported receive
-    // 5 - exported sent
-    [Flags]
-    internal enum TransferConnectionType
-    {
-        Receive = 0x00,
-        Sent = 0x01,
-        Imported = 0x02,
-        Exported = 0x04
-    }
-
-
     /// <summary>
     /// Used as base storage in Dictionary by pairs: TransferReason - Quantity
     /// </summary>
@@ -143,20 +126,20 @@ namespace TransferInfo.Data
 
         internal ConnectedTransfersStorage()
         {
-            _data = new ReasonTransfersStorage[CargoBatch.NumConnectionTypes];
+            _data = new ReasonTransfersStorage[(int)TransferConnectionType.NumConnectionTypes];
             Init();
         }
 
         internal ConnectedTransfersStorage(TransferConnectionType transferConnectionType, TransferReason transferReason, int quantity)
         {
-            _data = new ReasonTransfersStorage[CargoBatch.NumConnectionTypes];
+            _data = new ReasonTransfersStorage[(int)TransferConnectionType.NumConnectionTypes];
             Init();
             AddTransfer(transferConnectionType, transferReason, quantity);
         }
 
         private void Init()
         {
-            for (int i = 0; i < CargoBatch.NumConnectionTypes; i++)
+            for (int i = 0; i < (int)TransferConnectionType.NumConnectionTypes; i++)
                 _data[i] = new ReasonTransfersStorage();
         }
         
@@ -165,12 +148,10 @@ namespace TransferInfo.Data
             _data[(int)transferConnection].AddTransfer(transferReason, quantity);
         }
         
-        /*
-        internal TransfersStorage GetStorageByType(TransferConnectionType type)
+        internal ReasonTransfersStorage GetStorageByType(TransferConnectionType type)
         {
-            return Transfers[(int)type];
+            return _data[(int)type];
         }
-        */
     }
 
     /// <summary>
@@ -184,7 +165,7 @@ namespace TransferInfo.Data
 
         internal BuildingTransfersStorage()
         {
-             _data = new Dictionary<ushort, ConnectedTransfersStorage>();
+            _data = new Dictionary<ushort, ConnectedTransfersStorage>();
         }
 
         internal void AddTransfer(CargoBatch cargoBatch)
@@ -198,6 +179,12 @@ namespace TransferInfo.Data
                 connectedTransfers = new ConnectedTransfersStorage(cargoBatch.transferConnectionType, cargoBatch.transferReason, cargoBatch.transferSize);
                 _data.Add(cargoBatch.buildingID, connectedTransfers);
             }
+        }
+
+        internal ConnectedTransfersStorage GetBuildingData(ushort buildingID)
+        {
+            _data.TryGetValue(buildingID, out ConnectedTransfersStorage result);
+            return result;
         }
     }
 }

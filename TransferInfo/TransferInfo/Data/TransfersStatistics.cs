@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
+
+using TransferReason = TransferManager.TransferReason;
 
 namespace TransferInfo.Data
 {
@@ -29,6 +32,15 @@ namespace TransferInfo.Data
             //note: move check to HarmonyPatches
             if (cargoBatch.buildingID != 0 && BuildingManager.instance.m_buildings.m_buffer[cargoBatch.buildingID].Info.m_buildingAI is CargoStationAI)
                 _data[0].AddTransfer(cargoBatch);
+        }
+
+        //note: returning -1 is normal and only for tests with Original ModInfo statistics panel.
+        internal int GetBuildingTransfersStorage(int period, ushort buildingID, TransferConnectionType transferConnectionType, TransferReason transferReason)
+        {
+            ConnectedTransfersStorage connectedTransfersStorage = _data[period].GetBuildingData(buildingID);
+            if (connectedTransfersStorage == null)
+                return -1;
+            return connectedTransfersStorage.GetStorageByType(transferConnectionType).GetTransferedValue(transferReason);
         }
     }
 }
