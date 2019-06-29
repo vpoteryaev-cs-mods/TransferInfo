@@ -37,7 +37,8 @@ namespace TransferInfo.UI
         private readonly Vector2 ChartSize = new Vector2(90, 90);
         private readonly RectOffset Padding = new RectOffset(2, 2, 2, 2);
         private readonly Color32 CargoUnitColor = new Color32(206, 248, 0, 255);
-
+        private readonly Vector2 ModeButtonSize = new Vector2(32, 10);
+        private bool bDisplayCurrentPeriod;
         private ushort lastSelectedBuilding;
 
         public OrigCargoInfoPanel()
@@ -47,6 +48,7 @@ namespace TransferInfo.UI
         private readonly List<UICargoChart> charts = new List<UICargoChart>();
         private readonly List<UILabel> labels = new List<UILabel>();
         private UILabel windowLabel, localLabel, importLabel, exportLabel, rcvdLabel, sentLabel;
+        private UIButton switchPeriodButton;
 
         public override void Awake()
         {
@@ -135,6 +137,25 @@ namespace TransferInfo.UI
             sentStatPanel.autoLayoutStart = LayoutStart.TopRight;
             sentStatPanel.autoLayoutPadding = Padding;
 
+            switchPeriodButton = sentStatPanel.AddUIComponent<UIButton>();
+            switchPeriodButton.text = "Prev";
+            switchPeriodButton.normalBgSprite = "ButtonMenu";
+            switchPeriodButton.pressedBgSprite = "ButtonMenuPressed";
+            switchPeriodButton.hoveredBgSprite = "ButtonMenuHovered";
+            switchPeriodButton.textScale = 0.6f;
+            switchPeriodButton.autoSize = false;
+            switchPeriodButton.size = ModeButtonSize;
+
+            switchPeriodButton.eventClicked += (sender, e) =>
+            {
+                bDisplayCurrentPeriod = !bDisplayCurrentPeriod;
+                switchPeriodButton.text = bDisplayCurrentPeriod ? "Cur" : "Prev";
+                switchPeriodButton.tooltip = bDisplayCurrentPeriod
+                    ? "Switch between displayed periods (now displaying values for the current period)"
+                    : "Switch between displayed periods (now displaying values for the previous period)";
+                switchPeriodButton.RefreshTooltip();
+            };
+
             for (int n = 0; n < (int)TransferConnectionType.NumConnectionTypes; n++)
             {
                 var chart = (n % 2 == 1 ? sentPanel : rcvdPanel).AddUIComponent<UICargoChart>();
@@ -184,23 +205,24 @@ namespace TransferInfo.UI
             UpdateCounterValues();
         }
 
-        private int[] GetBuildingTransferedValues(ushort buildingID, TransferConnectionType transferConnectionType)
+        private int[] GetBuildingTransferedValues(int period, ushort buildingID, TransferConnectionType transferConnectionType)
         {
             int[] result = new int[DataShared.TrackedCargoTypes.Count];
             for (int i = 0; i < DataShared.TrackedCargoTypes.Count; i++)
             {
-                result[i] = DataShared.Data.GetBuildingTransfersStorage(0, buildingID, transferConnectionType, (TransferManager.TransferReason)DataShared.TrackedCargoTypes.ElementAt(i));
+                result[i] = DataShared.Data.GetBuildingTransfersStorage(period, buildingID, transferConnectionType, (TransferManager.TransferReason)DataShared.TrackedCargoTypes.ElementAt(i));
             }
             return result;
         }
 
         public void UpdateCounterValues()
         {
-            if (DataShared.Data.GetBuildingTransfersStorage(0, lastSelectedBuilding, TransferConnectionType.Exported, TransferManager.TransferReason.AnimalProducts) < 0) return;
+            int period = bDisplayCurrentPeriod ? 0 : 1;
+            if (DataShared.Data.GetBuildingTransfersStorage(period, lastSelectedBuilding, TransferConnectionType.Exported, TransferManager.TransferReason.AnimalProducts) < 0) return;
 
             for (var i = 0; i < (int)TransferConnectionType.NumConnectionTypes; i++)
             {
-                int[] buildingData = GetBuildingTransferedValues(lastSelectedBuilding, (TransferConnectionType)i);
+                int[] buildingData = GetBuildingTransferedValues(period, lastSelectedBuilding, (TransferConnectionType)i);
                 int categoryTotal = buildingData.Sum();
 
                 labels[i].text = string.Format("{0:0}{1}", categoryTotal / 1000, "K Units");
