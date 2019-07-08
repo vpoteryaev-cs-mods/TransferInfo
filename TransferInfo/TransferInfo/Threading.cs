@@ -12,6 +12,7 @@ namespace TransferInfo
 {
     public class Threading: ThreadingExtensionBase
     {
+        private DateTime lastUpdate;
         //public override void OnCreated(IThreading threading)
         //{
         //    base.OnCreated(threading);
@@ -27,7 +28,14 @@ namespace TransferInfo
             base.OnUpdate(realTimeDelta, simulationTimeDelta);
 
             if (!Loader.IsActive) return;
-            //todo: update stuff
+
+            DateTime tempDateTime = SimulationManager.instance.m_currentGameTime;
+            if ((Options.useHourlyUpdates && lastUpdate.Hour < tempDateTime.Hour) ||
+                (!Options.useHourlyUpdates && lastUpdate < tempDateTime && tempDateTime.Day == 1))
+            {
+                lastUpdate = tempDateTime;
+                Data.DataShared.Data.UpdateStatistics();
+            }
         }
     }
 }

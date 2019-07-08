@@ -13,6 +13,7 @@ namespace TransferInfo
     {
         internal static bool IsActive { get; private set; }
         internal static UI.TransfersStatisticsPanel TransfersStatisticsPanel { get; private set; }
+        internal static UI.OrigCargoInfoPanel OrigCargoInfoPanel { get; private set; }
         public override void OnCreated(ILoading loading)
         {
             base.OnCreated(loading);
@@ -33,6 +34,7 @@ namespace TransferInfo
                 return;
             }
             TransfersStatisticsPanel = (UI.TransfersStatisticsPanel)UIView.GetAView().AddUIComponent(typeof(UI.TransfersStatisticsPanel));
+            OrigCargoInfoPanel = (UI.OrigCargoInfoPanel)UIView.GetAView().AddUIComponent(typeof(UI.OrigCargoInfoPanel));
             Hooking.Setup();
         }
 
@@ -42,6 +44,8 @@ namespace TransferInfo
 
             if (TransfersStatisticsPanel != null) GameObject.Destroy(TransfersStatisticsPanel);
             TransfersStatisticsPanel = null;
+            if (OrigCargoInfoPanel != null) GameObject.Destroy(OrigCargoInfoPanel);
+            OrigCargoInfoPanel = null;
         }
 
         public override void OnReleased()

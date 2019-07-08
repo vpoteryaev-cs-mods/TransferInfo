@@ -29,8 +29,6 @@ namespace TransferInfo.Data
 
         internal void AddBatch(CargoBatch cargoBatch)
         {
-            //note: move check to HarmonyPatches
-            if (cargoBatch.buildingID != 0 && BuildingManager.instance.m_buildings.m_buffer[cargoBatch.buildingID].Info.m_buildingAI is CargoStationAI)
                 _data[0].AddTransfer(cargoBatch);
         }
 
@@ -41,6 +39,13 @@ namespace TransferInfo.Data
             if (connectedTransfersStorage == null)
                 return -1;
             return connectedTransfersStorage.GetStorageByType(transferConnectionType).GetTransferedValue(transferReason);
+        }
+
+        internal void UpdateStatistics()
+        {
+            //todo: check data swaping
+            _data[1] = _data[0];
+            _data[0] = new BuildingTransfersStorage();
         }
     }
 }
