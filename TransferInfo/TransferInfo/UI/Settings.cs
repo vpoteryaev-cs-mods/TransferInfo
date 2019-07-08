@@ -3,24 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ICities;
+using ColossalFramework.UI;
 
 namespace TransferInfo.UI
 {
     class Settings
     {
+        private static UIDropDown updateIntervalDropDown;
+        private static UIButton cleanupButton;
+
+        private static readonly string[] updateIntervalLabels =
+        {
+            "Monthly",
+            "Weekly",
+            "Dayly",
+            "Hourly"
+        };
+
+        internal static void OnLoaded()
+        {
+            updateIntervalDropDown.selectedIndex = TransferInfo.Data.DataShared.Data.updateInterval;
+        }
+
         internal static void OnSettingsUI(UIHelperBase helper)
         {
-            var dataUpdateGroup = helper.AddGroup("Update statistics interval\n\n" +
-                "Note: by default mounthly updates in the \"Cargo Statistics\" window are used.\n" +
-                "Seems too long for the \"Real Time\" mod users.");
-            dataUpdateGroup.AddCheckbox("Use hourly update", Options.useHourlyUpdates, state => Options.useHourlyUpdates.value = state);
+            int updateInterval = 0;
 
+            if (Loader.IsActive)
+                updateInterval = TransferInfo.Data.DataShared.Data.updateInterval;
+            updateIntervalDropDown = (UIDropDown)helper.AddDropdown("Update interval", updateIntervalLabels, updateInterval, state =>
+            {
+                TransferInfo.Data.DataShared.Data.updateInterval = state;
+            });
             var cleanGroup = helper.AddGroup("Before deleting this mod push \"Clean data\" button,\n" +
                 "save the game, exit and unsubscribe from \"Transfer Info\"");
-            cleanGroup.AddButton("Clean data", () => { Serialization.CleanData(); Hooking.Cleanup(); });
+            cleanupButton = (UIButton)cleanGroup.AddButton("Clean data", () => { Serialization.CleanData(); Hooking.Cleanup(); });
 
-            var debugGroup = helper.AddGroup("Debug");
-            debugGroup.AddCheckbox("Enable debug logging", Options.debugEnabled, state => Options.debugEnabled.value = state);
+            updateIntervalDropDown.isEnabled = Loader.IsActive;
+            cleanupButton.isEnabled = Loader.IsActive;
+
+            helper.AddSpace(5);
+            var globalGroup = helper.AddGroup("Global options");
+            globalGroup.AddCheckbox("Enable debug logging", Options.debugEnabled, state => Options.debugEnabled.value = state);
         }
     }
 }

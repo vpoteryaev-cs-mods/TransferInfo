@@ -16,8 +16,9 @@ namespace TransferInfo.Data
     [Serializable]
     internal class TransfersStatistics
     {
-        private readonly BuildingTransfersStorage[] _data;
         internal readonly string version;
+        private readonly BuildingTransfersStorage[] _data;
+        internal int updateInterval;
 
         internal TransfersStatistics(string version)
         {

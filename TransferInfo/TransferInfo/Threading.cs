@@ -12,7 +12,8 @@ namespace TransferInfo
 {
     public class Threading: ThreadingExtensionBase
     {
-        private DateTime lastUpdate;
+        private DateTime lastUpdate = DateTime.MinValue;
+
         //public override void OnCreated(IThreading threading)
         //{
         //    base.OnCreated(threading);
@@ -30,8 +31,10 @@ namespace TransferInfo
             if (!Loader.IsActive) return;
 
             DateTime tempDateTime = SimulationManager.instance.m_currentGameTime;
-            if ((Options.useHourlyUpdates && lastUpdate.Hour < tempDateTime.Hour) ||
-                (!Options.useHourlyUpdates && lastUpdate < tempDateTime && tempDateTime.Day == 1))
+            if ((Data.DataShared.Data.updateInterval == 3 && lastUpdate < tempDateTime && tempDateTime.Minute == 0) ||
+                (Data.DataShared.Data.updateInterval == 2 && lastUpdate < tempDateTime && tempDateTime.Hour == 0) ||
+                (Data.DataShared.Data.updateInterval == 1 && lastUpdate < tempDateTime && tempDateTime.DayOfWeek == DayOfWeek.Monday) ||
+                (Data.DataShared.Data.updateInterval == 0 && lastUpdate < tempDateTime && tempDateTime.Day == 1))
             {
                 lastUpdate = tempDateTime;
                 Data.DataShared.Data.UpdateStatistics();
