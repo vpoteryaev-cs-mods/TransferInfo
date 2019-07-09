@@ -16,7 +16,7 @@ namespace TransferInfo.UI
         {
             "Monthly",
             "Weekly",
-            "Dayly",
+            "Daily",
             "Hourly"
         };
 
