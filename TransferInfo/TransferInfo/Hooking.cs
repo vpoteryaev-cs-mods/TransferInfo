@@ -31,8 +31,13 @@ namespace TransferInfo
 #endif
             displayStatisticsHandler = (sender, e) =>
             {
-                Loader.TransfersStatisticsPanel.Show();
-                Loader.OrigCargoInfoPanel.Show();
+                //todo: update PanelHook with additional check functionality
+                ushort buildingID = WorldInfoPanel.GetCurrentInstanceID().Building;
+                if (buildingID != 0 && BuildingManager.instance.m_buildings.m_buffer[buildingID].Info.m_buildingAI is CargoStationAI)
+                {
+                    Loader.TransfersStatisticsPanel.Show();
+                    Loader.OrigCargoInfoPanel.Show();
+                }
             };
 
             if (!HookManager.IsHooked(displayStatisticsHandler, statsHookedPanel))
