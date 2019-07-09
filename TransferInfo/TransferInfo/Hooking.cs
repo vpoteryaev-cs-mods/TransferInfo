@@ -35,7 +35,8 @@ namespace TransferInfo
                 ushort buildingID = WorldInfoPanel.GetCurrentInstanceID().Building;
                 if (buildingID != 0 && BuildingManager.instance.m_buildings.m_buffer[buildingID].Info.m_buildingAI is CargoStationAI)
                 {
-                    Loader.TransfersStatisticsPanel.Show();
+                    //note: temporary disable own panel
+                    //Loader.TransfersStatisticsPanel.Show();
                     Loader.OrigCargoInfoPanel.Show();
                 }
             };
