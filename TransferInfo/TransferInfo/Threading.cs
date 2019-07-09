@@ -31,10 +31,10 @@ namespace TransferInfo
             if (!Loader.IsActive) return;
 
             DateTime tempDateTime = SimulationManager.instance.m_currentGameTime;
-            if ((Data.DataShared.Data.updateInterval == 3 && lastUpdate < tempDateTime && tempDateTime.Minute == 0) ||
-                (Data.DataShared.Data.updateInterval == 2 && lastUpdate < tempDateTime && tempDateTime.Hour == 0) ||
-                (Data.DataShared.Data.updateInterval == 1 && lastUpdate < tempDateTime && tempDateTime.DayOfWeek == DayOfWeek.Monday) ||
-                (Data.DataShared.Data.updateInterval == 0 && lastUpdate < tempDateTime && tempDateTime.Day == 1))
+            if ((Data.DataShared.Data.updateInterval == 3 && lastUpdate.Hour < tempDateTime.Hour && tempDateTime.Minute == 0) ||
+                (Data.DataShared.Data.updateInterval == 2 && lastUpdate.Day < tempDateTime.Day && tempDateTime.Hour == 0) ||
+                (Data.DataShared.Data.updateInterval == 1 && lastUpdate.Day < tempDateTime.Day && tempDateTime.DayOfWeek == DayOfWeek.Monday) ||
+                (Data.DataShared.Data.updateInterval == 0 && lastUpdate.Month < tempDateTime.Month && tempDateTime.Day == 1))
             {
                 lastUpdate = tempDateTime;
                 Data.DataShared.Data.UpdateStatistics();

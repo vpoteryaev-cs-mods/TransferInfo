@@ -43,7 +43,6 @@ namespace TransferInfo.Data
 
         internal void UpdateStatistics()
         {
-            //todo: check data swaping
             _data[1] = _data[0];
             _data[0] = new BuildingTransfersStorage();
         }
