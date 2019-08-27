@@ -25,6 +25,7 @@ namespace TransferInfo
 
             //note: seems in docs stated that fired only in simulation thread.
             //if (!Loader.IsActive) return;
+
             var data = serializableDataManager.LoadData(Options.GameStorageID);
             if (data == null)
             {
@@ -37,7 +38,10 @@ namespace TransferInfo
                 var tempData = formatter.Deserialize(stream);
                 if (tempData is TransfersStatistics tempStorageData)
                     if (tempStorageData.version == Options.StorageVersion)
+                    {
                         DataShared.Data = tempStorageData;
+                        UI.Settings.OnLoaded();
+                    }
                     else
                     {
                         CleanData(false);

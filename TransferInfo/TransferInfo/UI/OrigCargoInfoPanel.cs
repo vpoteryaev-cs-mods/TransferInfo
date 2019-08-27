@@ -38,7 +38,7 @@ namespace TransferInfo.UI
         private readonly RectOffset Padding = new RectOffset(2, 2, 2, 2);
         private readonly Color32 CargoUnitColor = new Color32(206, 248, 0, 255);
         private readonly Vector2 ModeButtonSize = new Vector2(32, 10);
-        private bool bDisplayCurrentPeriod;
+        private bool bDisplayPrevPeriod;
         private ushort lastSelectedBuilding;
 
         public OrigCargoInfoPanel()
@@ -138,7 +138,7 @@ namespace TransferInfo.UI
             sentStatPanel.autoLayoutPadding = Padding;
 
             switchPeriodButton = sentStatPanel.AddUIComponent<UIButton>();
-            switchPeriodButton.text = "Prev";
+            switchPeriodButton.text = "Cur";
             switchPeriodButton.normalBgSprite = "ButtonMenu";
             switchPeriodButton.pressedBgSprite = "ButtonMenuPressed";
             switchPeriodButton.hoveredBgSprite = "ButtonMenuHovered";
@@ -148,11 +148,11 @@ namespace TransferInfo.UI
 
             switchPeriodButton.eventClicked += (sender, e) =>
             {
-                bDisplayCurrentPeriod = !bDisplayCurrentPeriod;
-                switchPeriodButton.text = bDisplayCurrentPeriod ? "Cur" : "Prev";
-                switchPeriodButton.tooltip = bDisplayCurrentPeriod
-                    ? "Switch between displayed periods (now displaying values for the current period)"
-                    : "Switch between displayed periods (now displaying values for the previous period)";
+                bDisplayPrevPeriod = !bDisplayPrevPeriod;
+                switchPeriodButton.text = bDisplayPrevPeriod ? "Prev" : "Cur";
+                switchPeriodButton.tooltip = bDisplayPrevPeriod
+                    ? "Switch between displayed periods (now displaying values for the previous period)"
+                    : "Switch between displayed periods (now displaying values for the current period)";
                 switchPeriodButton.RefreshTooltip();
             };
 
@@ -217,8 +217,7 @@ namespace TransferInfo.UI
 
         public void UpdateCounterValues()
         {
-            int period = bDisplayCurrentPeriod ? 0 : 1;
-            if (DataShared.Data.GetBuildingTransfersStorage(period, lastSelectedBuilding, TransferConnectionType.Exported, TransferManager.TransferReason.AnimalProducts) < 0) return;
+            int period = bDisplayPrevPeriod ? 1 : 0;
 
             for (var i = 0; i < (int)TransferConnectionType.NumConnectionTypes; i++)
             {

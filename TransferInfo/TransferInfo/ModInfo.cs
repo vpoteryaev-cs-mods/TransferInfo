@@ -11,7 +11,7 @@ namespace TransferInfo
     public class ModInfo: IUserMod
     {
         public string Name => "Transfer Info";
-        public string Description => "bla-bla-bla";
+        public string Description => "Additional statistics of movement of goods";
 
         public ModInfo()
         {

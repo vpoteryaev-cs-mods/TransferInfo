@@ -16,8 +16,9 @@ namespace TransferInfo.Data
     [Serializable]
     internal class TransfersStatistics
     {
-        private readonly BuildingTransfersStorage[] _data;
         internal readonly string version;
+        private readonly BuildingTransfersStorage[] _data;
+        internal int updateInterval;
 
         internal TransfersStatistics(string version)
         {
@@ -32,18 +33,16 @@ namespace TransferInfo.Data
                 _data[0].AddTransfer(cargoBatch);
         }
 
-        //note: returning -1 is normal and only for tests with Original ModInfo statistics panel.
         internal int GetBuildingTransfersStorage(int period, ushort buildingID, TransferConnectionType transferConnectionType, TransferReason transferReason)
         {
             ConnectedTransfersStorage connectedTransfersStorage = _data[period].GetBuildingData(buildingID);
             if (connectedTransfersStorage == null)
-                return -1;
+                return 0;
             return connectedTransfersStorage.GetStorageByType(transferConnectionType).GetTransferedValue(transferReason);
         }
 
         internal void UpdateStatistics()
         {
-            //todo: check data swaping
             _data[1] = _data[0];
             _data[0] = new BuildingTransfersStorage();
         }
