@@ -60,9 +60,15 @@ namespace TransferInfo
                 Debug.LogError("TransferInfo: StorageManager.OnLoadData - Failed to deserialize. Reason: " + e.Message);
                 //throw;
             }
-            //finally
-            //{
-            //}
+            finally
+            {
+                //note: In MS docs stated:
+                //This type implements the IDisposable interface, but does not actually have any resources to dispose.
+                //This means that disposing it by directly calling Dispose() or by using a language construct such as using (in C#) or Using (in Visual Basic) is not necessary.
+                //
+                //but in examples 'using' is used. So we too free resources here and in OnSaveData()
+                stream.Dispose();
+            }
         }
 
         public override void OnSaveData()
@@ -74,22 +80,24 @@ namespace TransferInfo
 
             if (Options.Cleaning) return;
 
-            MemoryStream stream = new MemoryStream();
-            BinaryFormatter formatter = new BinaryFormatter();
-            try
+            using (MemoryStream stream = new MemoryStream())
             {
-                formatter.Serialize(stream, DataShared.Data);
-            }
-            catch (SerializationException e)
-            {
-                Debug.LogError("TransferInfo: StorageManager.OnSaveData - Failed to serialize. Reason: " + e.Message);
-                //throw;
-            }
-            //finally
-            //{
-            //}
+                BinaryFormatter formatter = new BinaryFormatter();
+                try
+                {
+                    formatter.Serialize(stream, DataShared.Data);
+                }
+                catch (SerializationException e)
+                {
+                    Debug.LogError("TransferInfo: StorageManager.OnSaveData - Failed to serialize. Reason: " + e.Message);
+                    //throw;
+                }
+                //finally
+                //{
+                //}
 
-            serializableDataManager.SaveData(Options.GameStorageID, stream.ToArray());
+                serializableDataManager.SaveData(Options.GameStorageID, stream.ToArray());
+            }
         }
 
         //public override void OnReleased()
