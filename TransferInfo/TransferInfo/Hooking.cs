@@ -16,6 +16,11 @@ namespace TransferInfo
 
         private static UIPanel statsHookedPanel;
 
+        private static MouseEventHandler displayCragoChartHandler;
+        private const string displayCargoChartMsg = "Transfer Info -> Display Cargo Chart";
+
+        private static UIPanel vehiclePanel;
+
         internal static void Setup()
         {
             var servicePanel = (UIPanel)UIView.library.Get("CityServiceWorldInfoPanel");
@@ -43,12 +48,35 @@ namespace TransferInfo
 
             if (!HookManager.IsHooked(displayStatisticsHandler, statsHookedPanel))
                 HookManager.AddHook(displayStatisticsHandler, statsHookedPanel, displayStatisticsMsg, BuildingChecker);
+
+            var vehicleInfoPanel = (UIPanel)UIView.library.Get("CityServiceVehicleWorldInfoPanel");
+            vehiclePanel = vehicleInfoPanel?.Find<UIPanel>("Panel");
+            if (vehiclePanel == null)
+            {
+                if (Options.debugEnabled)
+                    Debug.LogError("TransferInfo: Hooking.Setup - Hooking targets have to be checked");
+                return;
+            }
+#if DEBUG
+            Debug.Log("TransferInfo: Hooking.Setup - CityServiceVehicleWorldInfoPanel.Panel panel found");
+#endif
+            displayCragoChartHandler = (sender, e) =>
+            {
+                Loader.CarriedCargoPanel.Show();
+            };
+
+            if (!HookManager.IsHooked(displayCragoChartHandler, vehiclePanel))
+            {
+                HookManager.AddHook(displayCragoChartHandler, vehiclePanel, displayCargoChartMsg, VehicleChecker);
+            }
         }
 
         internal static void Cleanup()
         {
             if (HookManager.IsHooked(displayStatisticsHandler, statsHookedPanel))
                  HookManager.RemoveHook(displayStatisticsHandler, statsHookedPanel);
+            if (HookManager.IsHooked(displayCragoChartHandler, vehiclePanel))
+                HookManager.RemoveHook(displayCragoChartHandler, vehiclePanel);
         }
 
         internal static bool BuildingChecker()
@@ -56,6 +84,17 @@ namespace TransferInfo
             ushort buildingID = WorldInfoPanel.GetCurrentInstanceID().Building;
             if (buildingID != 0 && BuildingManager.instance.m_buildings.m_buffer[buildingID].Info.m_buildingAI is CargoStationAI)
                 return true;
+            return false;
+        }
+
+        internal static bool VehicleChecker()
+        {
+            var vehicleID = WorldInfoPanel.GetCurrentInstanceID().Vehicle;
+            if (vehicleID != 0)
+            {
+                var ai = VehicleManager.instance.m_vehicles.m_buffer[vehicleID].Info.m_vehicleAI;
+                return (ai is CargoTrainAI || ai is CargoShipAI) ? true : false;
+            }
             return false;
         }
     }
