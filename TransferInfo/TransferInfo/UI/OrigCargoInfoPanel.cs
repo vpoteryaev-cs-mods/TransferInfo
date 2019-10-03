@@ -10,22 +10,6 @@ using TransferInfo.Data;
 
 namespace TransferInfo.UI
 {
-    class UICargoChart : UIRadialChart
-    {
-        public UICargoChart()
-        {
-            spriteName = "PieChartBg";
-            size = new Vector2(90, 90);
-            for (int i = 0; i < DataShared.TrackedCargoTypes.Count; i++)
-            {
-                var resourceColor = TransferManager.instance.m_properties.m_resourceColors[DataShared.TrackedCargoTypes.ElementAt(i)];
-                AddSlice();
-                GetSlice(i).innerColor = GetSlice(i).outterColor = resourceColor;
-            }
-            SetValues(DataShared.TrackedCargoTypes.Select(t => 0f).ToArray());
-        }
-    }
-
     class OrigCargoInfoPanel: UIPanel
     {
         private const int Width = 384;
@@ -45,7 +29,7 @@ namespace TransferInfo.UI
         {
         }
 
-        private readonly List<UICargoChart> charts = new List<UICargoChart>();
+        private readonly List<CargoChart> charts = new List<CargoChart>();
         private readonly List<UILabel> labels = new List<UILabel>();
         private UILabel windowLabel, localLabel, importLabel, exportLabel, rcvdLabel, sentLabel;
         private UIButton switchPeriodButton;
@@ -158,7 +142,7 @@ namespace TransferInfo.UI
 
             for (int n = 0; n < (int)TransferConnectionType.NumConnectionTypes; n++)
             {
-                var chart = (n % 2 == 1 ? sentPanel : rcvdPanel).AddUIComponent<UICargoChart>();
+                var chart = (n % 2 == 1 ? sentPanel : rcvdPanel).AddUIComponent<CargoChart>();
                 chart.size = ChartSize;
                 charts.Add(chart);
 
