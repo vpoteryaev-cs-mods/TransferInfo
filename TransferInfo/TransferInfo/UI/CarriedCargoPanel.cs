@@ -91,44 +91,72 @@ namespace TransferInfo.UI
             if (vehicleID != 0)
             {
                 int guard = 0;
-                var vehicleInfo = VehicleManager.instance.m_vehicles.m_buffer;
+
+                Vehicle[] vehicles = VehicleManager.instance.m_vehicles.m_buffer;
+
                 // Find leading vehicle that actually has all the cargo
-                //while (VehicleManager.instance.m_vehicles.m_buffer[vehicleID].m_leadingVehicle != 0)
-                while (vehicleInfo[vehicleID].m_leadingVehicle != 0)
+                while (vehicles[vehicleID].m_leadingVehicle != 0)
                 {
-                    guard++;
-                    vehicleID = vehicleInfo[vehicleID].m_leadingVehicle;
-                    if (guard > ushort.MaxValue && Options.debugEnabled)
+                    vehicleID = vehicles[vehicleID].m_leadingVehicle;
+
+                    if (guard++ >= ushort.MaxValue)
                     {
-                        Debug.LogError("TransferInfo: CarriedCargoPanel.UpdateChart - Invalid list detected!");
+                        if (Options.debugEnabled)
+                        {
+                            Debug.LogError("TransferInfo: CarriedCargoPanel.UpdateChart - Invalid list detected!");
+                        }
                         Hide();
                         return;
                     }
                 }
 
-                var ai = vehicleInfo[vehicleID].Info.m_vehicleAI;
+                var ai = vehicles[vehicleID].Info.m_vehicleAI;
                 if (ai is CargoTrainAI || ai is CargoShipAI)
                 {
-                    var cargo = vehicleInfo[vehicleID].m_firstCargo;
-                    var result = new float[DataShared.TrackedCargoTypes.Count];
+                    var cargoID = vehicles[vehicleID].m_firstCargo;
+                    
+                    var cargoItems = new Dictionary<TransferManager.TransferReason, int>();
+
                     guard = 0;
-                    while (cargo != 0)
+                    while (cargoID != 0)
                     {
-                        result[vehicleInfo[cargo].m_transferType] += vehicleInfo[cargo].m_transferSize;
-                        cargo = vehicleInfo[cargo].m_nextCargo;
-                        guard++;
-                        if (guard > ushort.MaxValue)
+                        if (cargoItems.TryGetValue((TransferManager.TransferReason)vehicles[cargoID].m_transferType, out _))
                         {
-                            Debug.LogError("TransferInfo: CarriedCargoPanel.UpdateChart - Invalid list detected!");
+                            cargoItems[(TransferManager.TransferReason)vehicles[cargoID].m_transferType] += vehicles[cargoID].m_transferSize;
+                        }
+                        else
+                        {
+                            cargoItems.Add((TransferManager.TransferReason)vehicles[cargoID].m_transferType, vehicles[cargoID].m_transferSize);
+                        }
+                        
+                        cargoID = vehicles[cargoID].m_nextCargo;
+
+                        if (guard++ >= ushort.MaxValue)
+                        {
+                            if (Options.debugEnabled)
+                            {
+                                Debug.LogError("TransferInfo: CarriedCargoPanel.UpdateChart - Invalid list detected!");
+                            }
                             Hide();
                             return;
                         }
                     }
-                    var total = result.Sum();
-                    Debug.Log(string.Join(", ", result.Select(v => v / total).Select(f => f.ToString()).ToArray()));
+                    var total = cargoItems.Values.Sum();
                     chart.tooltip = string.Format("{0:N3} {1}", total / 1000d, "ton(s)");
-                    if (Math.Abs(total) < 1f) total = 1f;
-                    chart.SetValues(result.Select(v => v / total).ToArray());
+
+                    if (total == 0)
+                    {
+                        chart.SetValues(DataShared.TrackedCargoTypes.Select(t => 0f).ToArray());
+                        return;
+                    }
+
+                    int[] result = new int[DataShared.TrackedCargoTypes.Count];
+                    for (int i = 0; i < DataShared.TrackedCargoTypes.Count; i++)
+                    {
+                        cargoItems.TryGetValue((TransferManager.TransferReason)DataShared.TrackedCargoTypes.ElementAt(i), out int val);
+                        result[i] = val;
+                    }
+                    chart.SetValues(result.Select(v => v / (float)total).ToArray());
                     return;
                 }
             }
