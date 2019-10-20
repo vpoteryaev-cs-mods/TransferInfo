@@ -183,6 +183,7 @@ namespace TransferInfo.UI
 
             if (!isVisible) return;
 
+            // TODO: Auto-hide
             if (WorldInfoPanel.GetCurrentInstanceID().Building != 0)
                 lastSelectedBuilding = WorldInfoPanel.GetCurrentInstanceID().Building;
 
@@ -208,7 +209,7 @@ namespace TransferInfo.UI
                 int[] buildingData = GetBuildingTransferedValues(period, lastSelectedBuilding, (TransferConnectionType)i);
                 int categoryTotal = buildingData.Sum();
 
-                labels[i].text = string.Format("{0:0}{1}", categoryTotal / 1000, "K Units");
+                labels[i].text = string.Format("{0:N3} {1}", categoryTotal / 1000d, "ton(s)");
 
                 if (categoryTotal == 0)
                 {

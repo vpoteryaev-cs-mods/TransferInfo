@@ -79,6 +79,7 @@
     <Compile Include="Serialization.cs" />
     <Compile Include="Threading.cs" />
     <Compile Include="UI\CargoChart.cs" />
+    <Compile Include="UI\CarriedCargoPanel.cs" />
     <Compile Include="UI\OrigCargoInfoPanel.cs" />
     <Compile Include="UI\Settings.cs" />
     <Compile Include="UI\TransfersStatisticsPanel.cs" />
